@@ -1,5 +1,7 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {Link} from "react-router-dom";
+import {LoginButton} from "./LoginComponents/LoginButton";
+import {useState} from "react";
 const StyleDiv = styled.div`
     background: darkgray;
     height: 100vh;
@@ -10,7 +12,19 @@ const StyleDiv = styled.div`
     flex-direction: column;
 `;
 
+// 회전 애니메이션 정의
+const rotateAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+// 회전 애니메이션을 적용한 스타일드 컴포넌트
 const TitleDiv = styled.div`
+    position: relative;
     align-self: center;
     display: flex;
     justify-content: center;
@@ -21,9 +35,23 @@ const TitleDiv = styled.div`
     box-sizing: border-box;
     width: 201px;
     height: 200px;
-    background: linear-gradient(0deg, #FFFFFF, #FFFFFF), #FFFFFF;
     border: 1px solid #000000;
     border-radius: 10px;
+    background-color: aliceblue;
+    /* 텍스트가 넘치는 부분을 숨김 */
+    overflow: hidden;
+    &:before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        right: -1px;
+        bottom: -1px;
+        border: 1px solid #000000;
+        border-radius: 10px;
+        /* 회전 애니메이션 적용 */
+        animation: ${rotateAnimation} 5s linear infinite;
+    }
 `;
 
 const Label = styled.div`
@@ -42,33 +70,38 @@ const StyleInput = styled.input`
     width: 150px;
 `;
 
-const StyleLoginButton = styled.button`
-     background: linear-gradient(0deg, #FFFFFF, #FFFFFF), #FFFFFF;
-     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-     border-radius: 10px;
-    width: 83px;
-    height: 31px;
-`;
+
 
 export const Login = () => {
-    const handleSubmit = () => {
+    const [inputId, setInputId] = useState("");
+    const [inputPw, setInputPw] = useState("");
+    const handleInputId = (e : any):void => {
+        console.log("id : "+inputId);
+        setInputId(e.target.value);
+    };
+
+    const handleInputPw = (e : any) :void => {
+        console.log("pw : "+inputPw);
+        setInputPw(e.target.value);
     };
     return (
         <StyleDiv>
             <TitleDiv>Byoing</TitleDiv>
-            <form onSubmit={handleSubmit}>
-            <Label>
-                社員番号
-                <StyleInput placeholder="Enter ID" />
-            </Label>
-            <Label>
-                パスワード
-                <StyleInput placeholder="Enter Password" type="password" />
-            </Label>
-            </form>
-            <StyleLoginButton>
-                <Link to="/Main">Login</Link>
-            </StyleLoginButton>
+            <Label/>社員番号
+            <StyleInput placeholder="Enter ID"
+             type="id"
+             name="input-id"
+             value={inputId}
+             onChange={handleInputId}
+        />
+            <Label/>パスワード
+            <StyleInput placeholder="Enter Password"
+            type="password"
+            name="input_pw"
+            value={inputPw}
+            onChange={handleInputPw}
+        />
+            <LoginButton/>
         </StyleDiv>
     );
 };
